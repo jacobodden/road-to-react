@@ -210,25 +210,4 @@ class Button extends Component {
   }
 }
 
-/*
-// old way for functions ES5
-function Search(props) {
-  const { value, onChange, children } = props;
-  return (
-    <form>
-      {children} <input type="text" value={value} onChange={onChange} />
-    </form>
-  );
-}
-
-// second old way using destructoring
-function Search({ value, onChange, children }) {
-  return (
-    <form>
-      {children} <input type="text" value={value} onChange={onChange} />
-    </form>
-  );
-}
-*/
-
 export default App;
