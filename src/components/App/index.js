@@ -1,37 +1,37 @@
-import React, { Component } from "react";
-import axios from "axios";
-import "./App.css";
+import React, { Component } from 'react'
+import axios from 'axios'
+import './index.css'
 
-const DEFAULT_QUERY = "redux";
-const DEFAULT_HPP = "100";
+const DEFAULT_QUERY = 'redux'
+const DEFAULT_HPP = '100'
 
-const PATH_BASE = "https://hn.algolia.com/api/v1";
-const PATH_SEARCH = "/search";
+const PATH_BASE = 'https://hn.algolia.com/api/v1'
+const PATH_SEARCH = '/search'
 // TODO(jacob): remove due to use of axios
 //const PARAM_SEARCH = "query=";
 //const PARAM_PAGE = "page=";
 //const PARAM_HPP = "hitsPerPage=";
 
 class App extends Component {
-  _isMounted = false;
+  _isMounted = false
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       results: null,
-      searchKey: "",
+      searchKey: '',
       searchTerm: DEFAULT_QUERY,
       error: null
-    };
+    }
   }
 
   onDismiss = id => {
-    const { searchKey, results } = this.state;
-    const { hits, page } = results[searchKey];
+    const { searchKey, results } = this.state
+    const { hits, page } = results[searchKey]
 
-    const isNotID = item => item.objectID !== id;
-    const updatedHits = hits.filter(isNotID);
+    const isNotID = item => item.objectID !== id
+    const updatedHits = hits.filter(isNotID)
 
     this.setState({
       results: {
@@ -41,23 +41,23 @@ class App extends Component {
           page
         }
       }
-    });
-  };
+    })
+  }
 
   needsToSearchTopStories(searchTerm) {
-    return !this.state.results[searchTerm];
+    return !this.state.results[searchTerm]
   }
 
   onSearchSubmit = event => {
-    const { searchTerm } = this.state;
-    this.setState({ searchKey: searchTerm });
+    const { searchTerm } = this.state
+    this.setState({ searchKey: searchTerm })
 
     if (this.needsToSearchTopStories(searchTerm)) {
-      this.fetchSearchTopStories(searchTerm);
+      this.fetchSearchTopStories(searchTerm)
     }
 
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
   fetchSearchTopStories = (searchTerm, page = 0) => {
     axios
@@ -71,21 +71,20 @@ class App extends Component {
       .then(
         response => this._isMounted && this.setSearchTopStories(response.data)
       )
-      .catch(error => this._isMounted && this.setState({ error }));
-  };
+      .catch(error => this._isMounted && this.setState({ error }))
+  }
 
   onSearchChange = event => {
-    this.setState({ searchTerm: event.target.value });
-  };
+    this.setState({ searchTerm: event.target.value })
+  }
 
   setSearchTopStories = result => {
-    const { hits, page } = result;
-    const { searchKey, results } = this.state;
+    const { hits, page } = result
+    const { searchKey, results } = this.state
 
-    const oldHits =
-      results && results[searchKey] ? results[searchKey].hits : [];
+    const oldHits = results && results[searchKey] ? results[searchKey].hits : []
 
-    const updatedHits = [...oldHits, ...hits];
+    const updatedHits = [...oldHits, ...hits]
     this.setState({
       results: {
         ...results,
@@ -94,27 +93,26 @@ class App extends Component {
           page
         }
       }
-    });
-  };
+    })
+  }
 
   componentDidMount() {
-    this._isMounted = true;
+    this._isMounted = true
 
-    const { searchTerm } = this.state;
-    this.setState({ searchKey: searchTerm });
-    this.fetchSearchTopStories(searchTerm);
+    const { searchTerm } = this.state
+    this.setState({ searchKey: searchTerm })
+    this.fetchSearchTopStories(searchTerm)
   }
 
   componentWillUnmount() {
-    this._isMounted = false;
+    this._isMounted = false
   }
 
   render() {
-    const { searchTerm, results, searchKey, error } = this.state;
-    const page =
-      (results && results[searchKey] && results[searchKey].page) || 0;
+    const { searchTerm, results, searchKey, error } = this.state
+    const page = (results && results[searchKey] && results[searchKey].page) || 0
     const list =
-      (results && results[searchKey] && results[searchKey].hits) || [];
+      (results && results[searchKey] && results[searchKey].hits) || []
 
     return (
       <div className="App page">
@@ -142,35 +140,35 @@ class App extends Component {
           </Button>
         </div>
       </div>
-    );
+    )
   }
 }
 
 class Search extends Component {
   render() {
-    const { value, onChange, onSubmit, children } = this.props;
+    const { value, onChange, onSubmit, children } = this.props
 
     return (
       <form onSubmit={onSubmit}>
         <input type="text" value={value} onChange={onChange} />
         <button type="submit">{children}</button>
       </form>
-    );
+    )
   }
 }
 
 class Table extends Component {
   render() {
-    const { list, onDismiss } = this.props;
+    const { list, onDismiss } = this.props
     const largeColumn = {
-      width: "40%"
-    };
+      width: '40%'
+    }
     const midColumn = {
-      width: "30%"
-    };
+      width: '30%'
+    }
     const smallColumn = {
-      width: "10%"
-    };
+      width: '10%'
+    }
     return (
       <div className="table">
         {list.map(item => {
@@ -191,23 +189,23 @@ class Table extends Component {
                 </Button>
               </span>
             </div>
-          );
+          )
         })}
       </div>
-    );
+    )
   }
 }
 
 class Button extends Component {
   render() {
-    const { onClick, className = "", children } = this.props;
+    const { onClick, className = '', children } = this.props
 
     return (
       <button className={className} onClick={onClick} type="button">
         {children}
       </button>
-    );
+    )
   }
 }
 
-export default App;
+export default App
